@@ -145,7 +145,6 @@
 				5F71BE8AF7F9BB7A6FA89FF3 /* Pods-TyperVerbum-TyperVerbumTests.debug.xcconfig */,
 				2D4A288841191CBB6EE253FC /* Pods-TyperVerbum-TyperVerbumTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -484,6 +483,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Mariusz Smorawski (9P45J8KUTK)";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = TyperVerbum/Info.plist;
@@ -496,8 +498,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.typerverbum;
 				PRODUCT_NAME = TyperVerbum;
+				PROVISIONING_PROFILE_SPECIFIER = "Typer Verbum Dev";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -510,6 +513,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: MPL Verbum SA (2844JZY274)";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = TyperVerbum/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -521,8 +526,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.typerverbum;
 				PRODUCT_NAME = TyperVerbum;
+				PROVISIONING_PROFILE_SPECIFIER = "Typer Verbum Dist";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

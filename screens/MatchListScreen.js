@@ -141,7 +141,7 @@ export default class MatchListScreen extends React.Component {
 
     render() {
         return(
-            <View style={{flex: 1, backgroundColor: '#3a7917'}}>
+            <View style={{flex: 1, backgroundColor: '#b3b3b3'}}>
                 <SafeAreaView style={styles.view} forceInset={{ top: 'always', bottom: 0, right: 0, left: 0 }}>
                     <ImageBackground style={styles.view} source={require('../images/background.jpg')}>
                         <CustomHeader/>

@@ -27,6 +27,7 @@ export default class LoginScreen extends React.Component {
             password: '',
             error: '',
             modalErrorVisible: false,
+            isLoading: false,
         }
     }
 
@@ -46,7 +47,9 @@ export default class LoginScreen extends React.Component {
         if (password === "") {
             password = "aaaaaaaa"//"7FD73G7G"//"3DG61B7L"//"9LB92F3D"
         }*/
-
+        this.setState({
+            isLoading: true,
+        })
         const queryString = this.objToQueryString({
             key: this.props.keyApp,
         });
@@ -66,14 +69,17 @@ export default class LoginScreen extends React.Component {
         })
             .then(response => response.json())
             .then(async responseJson => {
-                console.log(responseJson);
                 if (responseJson.data.error.code === 0) {
                     await AsyncStorage.setItem('isLoggedIn', '1');
                     await AsyncStorage.setItem('token', responseJson.data.token);
+                    this.setState({
+                        isLoading: false,
+                    });
                     this.props.login(responseJson.data.token)
                 } else {
                     this.setState({
                         error: responseJson.data.error,
+                        isLoading: false,
                     }, () => this.setModalErrorVisible(true))
                 }
             })

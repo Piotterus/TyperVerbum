@@ -10,7 +10,7 @@ import {
     ScrollView,
     Dimensions,
     Image,
-    Switch,
+    Switch, ActivityIndicator,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,6 +28,7 @@ export default class MatchListScreen extends React.Component {
             ranking: '',
             error: '',
             modalErrorVisible: false,
+            isLoading: true,
         }
     }
 
@@ -57,7 +58,6 @@ export default class MatchListScreen extends React.Component {
             })
                 .then(response => response.json())
                 .then(responseJson => {
-                    console.log(responseJson);
                     if (responseJson.data.error.code === 0) {
                         this.setState({
                             ranking: responseJson.data.ranking
@@ -80,7 +80,9 @@ export default class MatchListScreen extends React.Component {
                 });
         });
         this.listenerBlur = this.props.navigation.addListener('blur', () => {
-
+            this.setState({
+                isLoading: true,
+            })
         });
     }
 
@@ -109,7 +111,6 @@ export default class MatchListScreen extends React.Component {
     }
 
     render() {
-        console.log(this.state.ranking);
         return(
             <View style={{flex: 1, backgroundColor: '#b3b3b3'}}>
                 <SafeAreaView style={styles.view} forceInset={{ top: 'always', bottom: 0, right: 0, left: 0 }}>
@@ -137,6 +138,11 @@ export default class MatchListScreen extends React.Component {
                             </Text>
                         </View>
                     </ImageBackground>
+                    {this.state.isLoading &&
+                    <View style={styles.loading}>
+                        <ActivityIndicator size='large' color='#0A3251'/>
+                    </View>
+                    }
                 </SafeAreaView>
             </View>
         )
@@ -314,6 +320,17 @@ const styles = StyleSheet.create({
         padding: 10,
         borderBottomColor: '#F1F9FF',
         borderBottomWidth: 1,
+    },
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#A3A3A3',
+        opacity: 0.25
     }
 });
 

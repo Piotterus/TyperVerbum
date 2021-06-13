@@ -10,8 +10,8 @@ export default class CustomHeader extends React.Component {
             <View>
                 <Image style={styles.headerImage} resizeMode="cover" source={require('../images/header.png')} />
                 {this.props.type === "back" &&
-                <Icon style={styles.backIcon} onPress={() => this.props.navigation.goBack()} name="arrow-left"
-                      size={40} color="#61a2ac"/>
+                    <Icon style={styles.backIcon} onPress={() => this.props.navigation.goBack()} name="arrow-left"
+                          size={40} color="#61a2ac"/>
                 }
                 {this.props.type === "burger" &&
                     <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}

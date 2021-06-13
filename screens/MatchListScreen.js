@@ -11,6 +11,7 @@ import {
     Dimensions,
     Image,
     Switch,
+    ActivityIndicator
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,6 +31,7 @@ export default class MatchListScreen extends React.Component {
             dayIndex: 0,
             error: '',
             modalErrorVisible: false,
+            isLoading: true,
         }
     }
 
@@ -59,11 +61,11 @@ export default class MatchListScreen extends React.Component {
             })
                 .then(response => response.json())
                 .then(responseJson => {
-                    console.log(responseJson);
                     if (responseJson.data.error.code === 0) {
                         this.setState({
                             daysList: responseJson.data.days,
                             matchList: responseJson.data.matches,
+                            dayIndex: responseJson.data.dayNowIndex,
                         }, () => this.setState({isLoading: false}))
                     } else {
                         this.setState({
@@ -83,7 +85,9 @@ export default class MatchListScreen extends React.Component {
                 });
         });
         this.listenerBlur = this.props.navigation.addListener('blur', () => {
-
+            this.setState({
+                isLoading: true,
+            })
         });
     }
 
@@ -168,6 +172,11 @@ export default class MatchListScreen extends React.Component {
                             </Text>
                         </View>
                     </ImageBackground>
+                    {this.state.isLoading &&
+                    <View style={styles.loading}>
+                        <ActivityIndicator size='large' color='#0A3251'/>
+                    </View>
+                    }
                 </SafeAreaView>
             </View>
         )
@@ -337,6 +346,17 @@ const styles = StyleSheet.create({
     betEndedButton: {
         backgroundColor: '#F1F9FF',
         borderColor: '#0E395A',
+    },
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#A3A3A3',
+        opacity: 0.25
     }
 });
 

@@ -7,7 +7,7 @@ import {
     TextInput,
     TouchableOpacity,
     ScrollView,
-    Dimensions, Image, ImageBackground,
+    Dimensions, Image, ImageBackground, ActivityIndicator,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
@@ -25,6 +25,7 @@ export default class RegisterScreen extends React.Component {
             password2: '',
             modalErrorVisible: false,
             error: '',
+            isLoading: false,
         }
     }
 
@@ -54,12 +55,16 @@ export default class RegisterScreen extends React.Component {
 
 
     registerUser() {
+        this.setState({
+            isLoading: true,
+        });
         if (this.state.password !== this.state.password2) {
             let error = {
                 message: 'Hasła nie są zgodne'
             };
             this.setState({
                 error: error,
+                isLoading: false,
             }, () => this.setModalErrorVisible(true))
         } else if (this.state.password.length < 8) {
             let error = {
@@ -67,6 +72,7 @@ export default class RegisterScreen extends React.Component {
             };
             this.setState({
                 error: error,
+                isLoading: false,
             }, () => this.setModalErrorVisible(true))
         } else {
             const queryString = this.objToQueryString({
@@ -89,7 +95,6 @@ export default class RegisterScreen extends React.Component {
             })
                 .then(response => response.json())
                 .then(responseJson => {
-                    console.log(responseJson);
                     if (responseJson.data.error.code === 0) {
                         let title = 'Dziękujemy za rejestracje';
                         let message = responseJson.data.info.message;
@@ -97,6 +102,7 @@ export default class RegisterScreen extends React.Component {
                     } else {
                         this.setState({
                             error: responseJson.data.error,
+                            isLoading: false,
                         }, () => this.setModalErrorVisible(true))
                     }
                 })
@@ -162,6 +168,11 @@ export default class RegisterScreen extends React.Component {
                             </View>
                         </ScrollView>
                     </ImageBackground>
+                    {this.state.isLoading &&
+                    <View style={styles.loading}>
+                        <ActivityIndicator size='large' color='#0A3251'/>
+                    </View>
+                    }
                 </SafeAreaView>
             </View>
         )
@@ -227,5 +238,16 @@ const styles = StyleSheet.create({
     },
     headerImage: {
         width: '100%',
+    },
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#A3A3A3',
+        opacity: 0.25
     }
 });

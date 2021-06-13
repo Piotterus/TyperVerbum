@@ -102,7 +102,7 @@ export default class HomeScreen extends React.Component {
             <View style={{flex: 1, backgroundColor: '#b3b3b3'}}>
                 <SafeAreaView style={styles.view} forceInset={{ top: 'always', bottom: 0, right: 0, left: 0 }}>
                     <ImageBackground style={styles.view} source={require('../images/background.jpg')}>
-                        <CustomHeader/>
+                        <CustomHeader type="burger" navigation={this.props.navigation}/>
                         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.scrollView}>
                             <ErrorModal visible={this.state.modalErrorVisible} error={this.state.error} setModalErrorVisible={this.setModalErrorVisible.bind(this)}/>
                             <View style={[styles.insideView, {flex: 1}]}>

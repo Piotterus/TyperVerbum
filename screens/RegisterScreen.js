@@ -121,7 +121,7 @@ export default class RegisterScreen extends React.Component {
             <View style={{flex: 1, backgroundColor: '#b3b3b3'}}>
                 <SafeAreaView style={{flex: 1}} forceInset={{ top: 'always', bottom: 0, right: 0, left: 0 }}>
                     <ImageBackground style={{flex: 1}} source={require('../images/background.jpg')}>
-                        <CustomHeader/>
+                        <CustomHeader type="back" navigation={this.props.navigation}/>
                         <ScrollView contentContainerStyle={[styles.backgroundContent, {flexGrow: 1}]}>
                             <ErrorModal visible={this.state.modalErrorVisible} error={this.state.error} setModalErrorVisible={this.setModalErrorVisible.bind(this)}/>
                             <View style={styles.textView}>

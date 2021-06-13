@@ -40,12 +40,12 @@ export default class LoginScreen extends React.Component {
 
     login(email,password) {
 
-        if (email === "") {
+        /*if (email === "") {
             email = "Test"//"PL45"//"PL42"//"PL22"
         }
         if (password === "") {
             password = "aaaaaaaa"//"7FD73G7G"//"3DG61B7L"//"9LB92F3D"
-        }
+        }*/
 
         const queryString = this.objToQueryString({
             key: this.props.keyApp,
@@ -131,7 +131,7 @@ export default class LoginScreen extends React.Component {
             <View style={{flex: 1, backgroundColor: '#b3b3b3'}}>
                 <SafeAreaView style={styles.view} forceInset={{ top: 'always', bottom: 0, right: 0, left: 0 }}>
                     <ImageBackground style={styles.view} source={require('../images/background.jpg')}>
-                        <CustomHeader/>
+                        <CustomHeader type="none" navigation={this.props.navigation}/>
                         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.scrollView}>
                             <ErrorModal visible={this.state.modalErrorVisible} error={this.state.error} setModalErrorVisible={this.setModalErrorVisible.bind(this)}/>
                             <View style={[styles.insideView, {flex: 1}]}>

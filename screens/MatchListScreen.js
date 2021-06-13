@@ -144,7 +144,7 @@ export default class MatchListScreen extends React.Component {
             <View style={{flex: 1, backgroundColor: '#b3b3b3'}}>
                 <SafeAreaView style={styles.view} forceInset={{ top: 'always', bottom: 0, right: 0, left: 0 }}>
                     <ImageBackground style={styles.view} source={require('../images/background.jpg')}>
-                        <CustomHeader/>
+                        <CustomHeader type="back" navigation={this.props.navigation}/>
                         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.scrollView}>
                             <View style={styles.headerView}>
                                 <Icon onPress={() => this.subtractDay()} name="arrow-left" size={30} color="#777777"/>

@@ -11,21 +11,26 @@ import {
     Dimensions,
     Image,
     Switch,
+    ActivityIndicator
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SafeAreaView from 'react-native-safe-area-view';
-import ErrorModal from '../components/ErrorModal';
+import Icon from 'react-native-vector-icons/Feather';
+import RankingItem from '../components/RankingItem';
+import MatchItem from '../components/MatchItem';
 import CustomHeader from '../components/CustomHeader';
+import QuestionItem from '../components/QuestionItem';
 
-export default class HomeScreen extends React.Component {
+export default class QuestionListScreen extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            points: 20,
+            questionList: '',
             error: '',
             modalErrorVisible: false,
+            isLoading: true,
         }
     }
 
@@ -45,7 +50,7 @@ export default class HomeScreen extends React.Component {
                 session: this.props.token,
             });
 
-            let url = `https://panel.verbum.com.pl/apiverbum/apiVerbum/typerPoints?${queryString}`;
+            let url = `https://panel.verbum.com.pl/apiverbum/apiVerbum/typerSpecialQuestionsList?${queryString}`;
 
             fetch(url, {
                 method: 'GET',
@@ -55,8 +60,11 @@ export default class HomeScreen extends React.Component {
             })
                 .then(response => response.json())
                 .then(responseJson => {
+                    console.log(responseJson.data.questions);
                     if (responseJson.data.error.code === 0) {
-                        this.props.updatePoints(responseJson.data.points);
+                        this.setState({
+                            questionList: responseJson.data.questions,
+                        }, () => this.setState({isLoading: false}))
                     } else {
                         this.setState({
                             isLoading: false,
@@ -75,7 +83,9 @@ export default class HomeScreen extends React.Component {
                 });
         });
         this.listenerBlur = this.props.navigation.addListener('blur', () => {
-
+            this.setState({
+                isLoading: true,
+            })
         });
     }
 
@@ -88,33 +98,36 @@ export default class HomeScreen extends React.Component {
         this.setState({ modalErrorVisible: visible });
     };
 
-    showErrorTypy() {
-        this.setState({
-            error: {
-                code: "BŁĄD",
-                message: "Typy Specjalne dostępne wkrótce",
-            }
-        }, () => this.setModalErrorVisible(true));
-    };
+    createQuestionList() {
+        let number = 0;
+        let questionList = [];
+        for (let i in this.state.questionList) {
+            number++;
+            questionList.push(<QuestionItem
+                key={i}
+                number={number}
+                navigation={this.props.navigation}
+                id={this.state.questionList[i].id}
+                question={this.state.questionList[i].question}
+                answer={this.state.questionList[i].answer}
+                time={this.state.questionList[i].endDate}
+                betEnded={this.state.questionList[i].betEnded}
+            />)
+        }
+        return questionList;
+    }
 
     render() {
         return(
             <View style={{flex: 1, backgroundColor: '#b3b3b3'}}>
                 <SafeAreaView style={styles.view} forceInset={{ top: 'always', bottom: 0, right: 0, left: 0 }}>
                     <ImageBackground style={styles.view} source={require('../images/background.jpg')}>
-                        <CustomHeader type="burger" navigation={this.props.navigation}/>
+                        <CustomHeader type="back" navigation={this.props.navigation}/>
                         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.scrollView}>
-                            <ErrorModal visible={this.state.modalErrorVisible} error={this.state.error} setModalErrorVisible={this.setModalErrorVisible.bind(this)}/>
                             <View style={[styles.insideView, {flex: 1}]}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate("MatchList")} style={styles.betButtom}>
-                                    <Text style={styles.loginText}>TYPUJ MECZE</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate("QuestionList")} style={styles.betButtom}>
-                                    <Text style={styles.loginText}>TYPY SPECJALNE</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate("Ranking")} style={styles.rankingButton}>
-                                    <Text style={styles.signinText}>ZOBACZ RANKING</Text>
-                                </TouchableOpacity>
+                                <View style={styles.matchesListView}>
+                                    {this.createQuestionList()}
+                                </View>
                             </View>
                         </ScrollView>
                         <View style={styles.bottomView}>
@@ -126,6 +139,11 @@ export default class HomeScreen extends React.Component {
                             </Text>
                         </View>
                     </ImageBackground>
+                    {this.state.isLoading &&
+                    <View style={styles.loading}>
+                        <ActivityIndicator size='large' color='#0A3251'/>
+                    </View>
+                    }
                 </SafeAreaView>
             </View>
         )
@@ -148,7 +166,6 @@ const styles = StyleSheet.create({
     insideView: {
         alignItems: 'center',
         width: Dimensions.get("window").width,//* 0.8,
-
         justifyContent: 'center',
         //height: Dimensions.get("window").height, //for full screen
     },
@@ -169,7 +186,7 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         //backgroundColor: 'blue',
-        //flex: 1,
+        flex: 1,
     },
     text: {
         fontSize: 25,
@@ -183,7 +200,7 @@ const styles = StyleSheet.create({
         height: 40,
         color: '#ffffff',
     },
-    betButtom: {
+    loginButton: {
         backgroundColor: '#61a2ac',
         width: '80%',
         alignItems: 'center',
@@ -204,8 +221,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
 
     },
-    rankingButton: {
-        marginTop: 55,
+    signinButton: {
+        marginTop: 30,
         backgroundColor: '#F1F9FF',
         borderColor: '#0E395A',
         borderWidth: 1,
@@ -242,6 +259,72 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 18,
 
+    },
+    headerView: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-around',
+        marginBottom: 15,
+        alignItems: 'center'
+    },
+    matchesListView: {
+        height: '100%',
+        width: '90%',
+        marginBottom: 30,
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    matchView1: {
+        borderRadius: 10,
+        borderColor: '#3a7917',
+        borderWidth: 1,
+        width: '95%',
+        marginTop: 10,
+        alignItems: 'center',
+        padding: 5,
+    },
+    matchView: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    middleView: {
+        alignItems: 'center',
+        flex: 2
+    },
+    scoreView: {
+        flexDirection: 'row',
+        alignSelf: 'center',
+    },
+    betButton: {
+        marginTop: 10,
+        alignSelf: 'center',
+        backgroundColor: '#61a2ac',
+        borderColor: '#0E395A',
+        borderWidth: 1,
+        width: '80%',
+        height: 50,
+        opacity: 0.8,
+        borderRadius: 25,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    betEndedButton: {
+        backgroundColor: '#F1F9FF',
+        borderColor: '#0E395A',
+    },
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#A3A3A3',
+        opacity: 0.25
     }
 });
 

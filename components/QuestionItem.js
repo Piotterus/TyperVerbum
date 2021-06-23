@@ -24,12 +24,11 @@ export default class QuestionItem extends React.Component {
                 </TouchableOpacity>
                 }
                 {this.props.betEnded === 0 &&
-                <TouchableOpacity onPress={() => this.props.navigation.navigate("Bet", {
-                    matchID: this.props.id,
-                    team1: this.props.team1,
-                    team2: this.props.team2,
-                    betGoals1: this.props.betGoals1,
-                    betGoals2: this.props.betGoals2,
+                <TouchableOpacity onPress={() => this.props.navigation.navigate("Answer", {
+                    questionID: this.props.id,
+                    time: this.props.time,
+                    questionText: this.props.question,
+                    answer: this.props.answer
                 })} style={styles.betButton}>
                     <Text>TYPUJ</Text>
                 </TouchableOpacity>

@@ -19,18 +19,17 @@ import Icon from 'react-native-vector-icons/Feather';
 import ErrorModal from '../components/ErrorModal';
 import CustomHeader from '../components/CustomHeader';
 
-export default class BetScreen extends React.Component {
+export default class AnswerScreen extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            goals1: 0,
-            goals2: 0,
             error: '',
             modalErrorVisible: false,
-            matchID: '',
-            team1: '',
-            team2: '',
+            questionID: '',
+            questionText: '',
+            time: '',
+            answer: '',
             isLoading: true,
         }
     }
@@ -46,19 +45,15 @@ export default class BetScreen extends React.Component {
     componentDidMount() {
         this.listenerFocus = this.props.navigation.addListener('focus', () => {
             //if (typeof this.props.route.params.title !== "undefined" && typeof this.props.route.params.message !== "undefined" ) {
-            if (this.props.route.params?.matchID) {
-                if (this.props.route.params.betGoals1 === null) {
-                    this.props.route.params.betGoals1 = 0;
-                }
-                if (this.props.route.params.betGoals2 === null) {
-                    this.props.route.params.betGoals2 = 0;
+            if (this.props.route.params?.questionID) {
+                if (this.props.route.params.answer === null) {
+                    this.props.route.params.answer = '';
                 }
                 this.setState({
-                    matchID: this.props.route.params.matchID,
-                    team1: this.props.route.params.team1,
-                    team2: this.props.route.params.team2,
-                    goals1: parseInt(this.props.route.params.betGoals1),
-                    goals2: parseInt(this.props.route.params.betGoals2),
+                    questionID: this.props.route.params.questionID,
+                    questionText: this.props.route.params.questionText,
+                    time: this.props.route.params.time,
+                    answer: this.props.route.params.answer,
                 }, () => this.setState({isLoading: false}))
             }
         });
@@ -78,31 +73,11 @@ export default class BetScreen extends React.Component {
         this.setState({ modalErrorVisible: visible });
     };
 
-    addGoal(number) {
-        if (number === 1) {
+    updateValue(text,field) {
+        if (field === 'answer') {
             this.setState({
-                goals1: this.state.goals1 + 1
+                answer: text,
             })
-        } else if (number === 2) {
-            this.setState({
-                goals2: this.state.goals2 + 1
-            })
-        }
-    }
-
-    subtractGoal(number) {
-        if (number === 1) {
-            if (this.state.goals1 > 0) {
-                this.setState({
-                    goals1: this.state.goals1 - 1
-                })
-            }
-        } else if (number === 2) {
-            if (this.state.goals2 > 0) {
-                this.setState({
-                    goals2: this.state.goals2 - 1
-                })
-            }
         }
     }
 
@@ -114,20 +89,13 @@ export default class BetScreen extends React.Component {
             key: this.props.keyApp,
             session: this.props.token,
         });
-        let winner = 0;
-        if (this.state.goals1 > this.state.goals2) {
-            winner = this.state.team1.id;
-        } else if (this.state.goals1 < this.state.goals2) {
-            winner = this.state.team2.id;
-        }
+
         let body = {
-            match_id: this.state.matchID,
-            goals1: this.state.goals1,
-            goals2: this.state.goals2,
-            winner: winner
+            question_id: this.state.questionID,
+            answer: this.state.answer,
         };
 
-        let url = `https://panel.verbum.com.pl/apiverbum/apiVerbum/typerBetMatch?${queryString}`;
+        let url = `https://panel.verbum.com.pl/apiverbum/apiVerbum/typerBetSpecialQuestion?${queryString}`;
 
         fetch(url, {
             method: 'POST',
@@ -170,22 +138,18 @@ export default class BetScreen extends React.Component {
                         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.scrollView}>
                             <ErrorModal visible={this.state.modalErrorVisible} error={this.state.error} setModalErrorVisible={this.setModalErrorVisible.bind(this)}/>
                             <View style={[styles.insideView, {flex: 1}]}>
-                                <Text style={{color: '#777777', fontSize: 30}}>MECZ</Text>
                                 <View style={styles.betView}>
-                                    <View style={{flexDirection: 'row',width: '100%', alignItems: 'center', justifyContent: 'space-around'}}>
-                                        <View style={styles.teamBetView}>
-                                            <Text style={styles.teamText}>{this.state.team1.name}</Text>
-                                            <Icon onPress={() => this.addGoal(1)} name="plus-circle" size={30} color="#3a7917"/>
-                                            <Text style={styles.goalsText}>{this.state.goals1}</Text>
-                                            <Icon onPress={() => this.subtractGoal(1)} name="minus-circle" size={30} color="#cd390d"/>
-                                        </View>
-                                        <View style={styles.teamBetView}>
-                                            <Text style={styles.teamText}>{this.state.team2.name}</Text>
-                                            <Icon onPress={() => this.addGoal(2)} name="plus-circle" size={30} color="#3a7917"/>
-                                            <Text style={styles.goalsText}>{this.state.goals2}</Text>
-                                            <Icon onPress={() => this.subtractGoal(2)} name="minus-circle" size={30} color="#cd390d"/>
-                                        </View>
-                                    </View>
+                                    <Text style={{color: '#777777', fontSize: 30}}>{this.state.questionText}</Text>
+                                    <TextInput
+                                        placeholder="ODPOWIEDŹ"
+                                        placeholderTextColor="#00000033"
+                                        textAlign='center'
+                                        style={styles.textInput}
+                                        value={this.state.answer}
+                                        onChangeText = {(text) => this.updateValue(text,'answer')}
+                                        autoCapitalize="none"
+                                        multiline={true}
+                                    />
                                     <TouchableOpacity onPress={() => this.sendBet()} style={styles.betButton}>
                                         <Text>ZAPISZ TYP</Text>
                                     </TouchableOpacity>
@@ -255,12 +219,12 @@ const styles = StyleSheet.create({
         color: '#ffffff',
     },
     textInput: {
-        borderBottomColor: '#ffffff',
+        borderBottomColor: '#777777',
         borderBottomWidth: 1,
         //width: 200,
         width: Dimensions.get("window").width * 0.8,
         height: 40,
-        color: '#ffffff',
+        color: '#777777',
     },
     loginButton: {
         backgroundColor: '#61a2ac',

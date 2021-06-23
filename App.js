@@ -17,6 +17,7 @@ import RankingScreen from './screens/RankingScreen';
 import SplashScreen from './screens/SplashScreen';
 import CustomDrawer from './components/CustomDrawer';
 import QuestionListScreen from './screens/QuestionListScreen';
+import AnswerScreen from './screens/AnswerScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -174,6 +175,14 @@ export default class App extends  React.Component {
                     </Drawer.Screen>
                     <Drawer.Screen name="QuestionList">
                       {props => <QuestionListScreen
+                          {...props}
+                          token={this.state.token}
+                          keyApp={this.state.key}
+                          points={this.state.points}
+                      />}
+                    </Drawer.Screen>
+                    <Drawer.Screen name="Answer">
+                      {props => <AnswerScreen
                           {...props}
                           token={this.state.token}
                           keyApp={this.state.key}

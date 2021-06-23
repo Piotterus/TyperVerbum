@@ -22,10 +22,20 @@ export default class MatchItem extends React.Component {
                             <Text>{this.props.goals2}</Text>
                         </View>
                         {this.props.betGoals1 !== null && this.props.betGoals2 !== null &&
-                        <Text>Twój TYP - {this.props.betGoals1}:{this.props.betGoals2}</Text>
+                        <Text>
+                            Twój TYP - {this.props.betGoals1}:{this.props.betGoals2}
+                            {this.props.betWinner === this.props.team1.id &&
+                            <Text>{" ("}{this.props.team1.name}{")"}</Text>
+                            }
+                            {this.props.betWinner === this.props.team2.id &&
+                            <Text>{" ("}{this.props.team2.name}{")"}</Text>
+                            }
+                        </Text>
                         }
                         {(this.props.betGoals1 === null || this.props.betGoals2 === null) &&
-                        <Text>Twój TYP - BRAK</Text>
+                        <Text>
+                            Twój TYP - BRAK
+                        </Text>
                         }
                     </View>
                     {this.props.winner === this.props.team2.id &&

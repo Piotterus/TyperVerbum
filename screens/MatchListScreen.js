@@ -120,6 +120,7 @@ export default class MatchListScreen extends React.Component {
         let number = 0;
         let matchList = [];
         for (let i in this.state.matchList) {
+            console.log(this.state.matchList[i].bet);
             if (this.state.matchList[i].day === this.state.daysList[this.state.dayIndex]) {
                 number++;
                 matchList.push(<MatchItem
@@ -133,6 +134,7 @@ export default class MatchListScreen extends React.Component {
                     goals2={this.state.matchList[i].goals2}
                     betGoals1={this.state.matchList[i].bet.goals1}
                     betGoals2={this.state.matchList[i].bet.goals2}
+                    betWinner={this.state.matchList[i].bet.winner}
                     stage={this.state.matchList[i].stage.name}
                     time={this.state.matchList[i].time}
                     betEnded={this.state.matchList[i].betEnded}

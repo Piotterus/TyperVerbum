@@ -32,6 +32,7 @@ export default class BetScreen extends React.Component {
             team1: '',
             team2: '',
             isLoading: true,
+            winner: '',
         }
     }
 
@@ -82,11 +83,11 @@ export default class BetScreen extends React.Component {
         if (number === 1) {
             this.setState({
                 goals1: this.state.goals1 + 1
-            })
+            }, () => this.checkWinner())
         } else if (number === 2) {
             this.setState({
                 goals2: this.state.goals2 + 1
-            })
+            }, () => this.checkWinner())
         }
     }
 
@@ -95,18 +96,49 @@ export default class BetScreen extends React.Component {
             if (this.state.goals1 > 0) {
                 this.setState({
                     goals1: this.state.goals1 - 1
-                })
+                }, () => this.checkWinner())
             }
         } else if (number === 2) {
             if (this.state.goals2 > 0) {
                 this.setState({
                     goals2: this.state.goals2 - 1
-                })
+                }, () => this.checkWinner())
             }
         }
     }
 
+    checkWinner() {
+        if (this.state.goals1 === this.state.goals2) {
+            this.setState({
+                winner: '',
+            })
+        } else if (this.state.goals1 > this.state.goals2) {
+            this.setState({
+                winner: this.state.team1.id,
+            })
+        } else {
+            this.setState({
+                winner: this.state.team2.id,
+            })
+        }
+    }
+
+    setWinner(team) {
+        this.setState({
+            winner: team,
+        })
+    }
+
     sendBet() {
+        if (this.state.winner === '') {
+            this.setState({
+                error: {
+                    code: "BŁĄD",
+                    message: "W PRZYPADKU REMISU MUSISZ WYBRAĆ ZWYCIĘZCĘ"
+                }
+            }, () => this.setModalErrorVisible(true));
+            return false;
+        }
         this.setState({
             isLoading: true,
         });
@@ -114,17 +146,12 @@ export default class BetScreen extends React.Component {
             key: this.props.keyApp,
             session: this.props.token,
         });
-        let winner = 0;
-        if (this.state.goals1 > this.state.goals2) {
-            winner = this.state.team1.id;
-        } else if (this.state.goals1 < this.state.goals2) {
-            winner = this.state.team2.id;
-        }
+
         let body = {
             match_id: this.state.matchID,
             goals1: this.state.goals1,
             goals2: this.state.goals2,
-            winner: winner
+            winner: this.state.winner
         };
 
         let url = `https://panel.verbum.com.pl/apiverbum/apiVerbum/typerBetMatch?${queryString}`;
@@ -174,13 +201,27 @@ export default class BetScreen extends React.Component {
                                 <View style={styles.betView}>
                                     <View style={{flexDirection: 'row',width: '100%', alignItems: 'center', justifyContent: 'space-around'}}>
                                         <View style={styles.teamBetView}>
-                                            <Text style={styles.teamText}>{this.state.team1.name}</Text>
+                                            <TouchableOpacity style={styles.teamButton} onPress={() => this.setWinner(this.state.team1.id)}>
+                                                {this.state.winner === this.state.team1.id &&
+                                                    <Text style={[styles.teamText, styles.winnerText]}>{this.state.team1.name}</Text>
+                                                }
+                                                {this.state.winner !== this.state.team1.id &&
+                                                    <Text style={styles.teamText}>{this.state.team1.name}</Text>
+                                                }
+                                            </TouchableOpacity>
                                             <Icon onPress={() => this.addGoal(1)} name="plus-circle" size={30} color="#3a7917"/>
                                             <Text style={styles.goalsText}>{this.state.goals1}</Text>
                                             <Icon onPress={() => this.subtractGoal(1)} name="minus-circle" size={30} color="#cd390d"/>
                                         </View>
                                         <View style={styles.teamBetView}>
-                                            <Text style={styles.teamText}>{this.state.team2.name}</Text>
+                                            <TouchableOpacity style={styles.teamButton} onPress={() => this.setWinner(this.state.team2.id)}>
+                                                {this.state.winner === this.state.team2.id &&
+                                                <Text style={[styles.teamText, styles.winnerText]}>{this.state.team2.name}</Text>
+                                                }
+                                                {this.state.winner !== this.state.team2.id &&
+                                                <Text style={styles.teamText}>{this.state.team2.name}</Text>
+                                                }
+                                            </TouchableOpacity>
                                             <Icon onPress={() => this.addGoal(2)} name="plus-circle" size={30} color="#3a7917"/>
                                             <Text style={styles.goalsText}>{this.state.goals2}</Text>
                                             <Icon onPress={() => this.subtractGoal(2)} name="minus-circle" size={30} color="#cd390d"/>
@@ -384,7 +425,7 @@ const styles = StyleSheet.create({
     teamText: {
         fontSize: 26,
         color: '#777777',
-        height: 100,
+        //height: 100,
         textAlign: 'center'
     },
     loading: {
@@ -397,6 +438,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#A3A3A3',
         opacity: 0.25
+    },
+    winnerText: {
+        color: '#ededed',
+        backgroundColor: '#62ad37',
+    },
+    teamButton: {
+        height: 100,
     }
 });
 

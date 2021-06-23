@@ -60,7 +60,6 @@ export default class QuestionListScreen extends React.Component {
             })
                 .then(response => response.json())
                 .then(responseJson => {
-                    console.log(responseJson.data.questions);
                     if (responseJson.data.error.code === 0) {
                         this.setState({
                             questionList: responseJson.data.questions,

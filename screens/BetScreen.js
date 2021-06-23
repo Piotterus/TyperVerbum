@@ -60,6 +60,7 @@ export default class BetScreen extends React.Component {
                     team2: this.props.route.params.team2,
                     goals1: parseInt(this.props.route.params.betGoals1),
                     goals2: parseInt(this.props.route.params.betGoals2),
+                    winner: this.props.route.params.betWinner
                 }, () => this.setState({isLoading: false}))
             }
         });
@@ -124,9 +125,15 @@ export default class BetScreen extends React.Component {
     }
 
     setWinner(team) {
-        this.setState({
-            winner: team,
-        })
+        if (this.state.team1.id === team && this.state.goals1 >= this.state.goals2) {
+            this.setState({
+                winner: team,
+            })
+        } else if (this.state.team2.id === team && this.state.goals1 <= this.state.goals2) {
+            this.setState({
+                winner: team,
+            })
+        }
     }
 
     sendBet() {

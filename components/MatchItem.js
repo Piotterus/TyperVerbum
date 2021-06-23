@@ -57,6 +57,7 @@ export default class MatchItem extends React.Component {
                     team2: this.props.team2,
                     betGoals1: this.props.betGoals1,
                     betGoals2: this.props.betGoals2,
+                    betWinner: this.props.betWinner,
                 })} style={styles.betButton}>
                     <Text>TYPUJ</Text>
                 </TouchableOpacity>

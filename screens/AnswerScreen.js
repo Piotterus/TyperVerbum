@@ -149,6 +149,7 @@ export default class AnswerScreen extends React.Component {
                                         onChangeText = {(text) => this.updateValue(text,'answer')}
                                         autoCapitalize="none"
                                         multiline={true}
+                                        numberOfLines={4}
                                     />
                                     <TouchableOpacity onPress={() => this.sendBet()} style={styles.betButton}>
                                         <Text>ZAPISZ TYP</Text>

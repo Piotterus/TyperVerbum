@@ -33,6 +33,7 @@ export default class App extends  React.Component {
       points: 0,
       rememberMe: false,
       week: 0,
+      baseURL: 'http://typer.verbum.com.pl/api'
     };
   }
 
@@ -147,6 +148,7 @@ export default class App extends  React.Component {
                           keyApp={this.state.key}
                           points={this.state.points}
                           updatePoints={this.updatePoints.bind(this)}
+                          baseURL={this.state.baseURL}
                       />}
                     </Drawer.Screen>
                     <Drawer.Screen name="MatchList">
@@ -155,6 +157,7 @@ export default class App extends  React.Component {
                           token={this.state.token}
                           keyApp={this.state.key}
                           points={this.state.points}
+                          baseURL={this.state.baseURL}
                       />}
                     </Drawer.Screen>
                     <Drawer.Screen name="Ranking">
@@ -163,6 +166,7 @@ export default class App extends  React.Component {
                           token={this.state.token}
                           keyApp={this.state.key}
                           points={this.state.points}
+                          baseURL={this.state.baseURL}
                       />}
                     </Drawer.Screen>
                     <Drawer.Screen name="Bet">
@@ -171,6 +175,7 @@ export default class App extends  React.Component {
                           token={this.state.token}
                           keyApp={this.state.key}
                           points={this.state.points}
+                          baseURL={this.state.baseURL}
                       />}
                     </Drawer.Screen>
                     <Drawer.Screen name="QuestionList">
@@ -179,6 +184,7 @@ export default class App extends  React.Component {
                           token={this.state.token}
                           keyApp={this.state.key}
                           points={this.state.points}
+                          baseURL={this.state.baseURL}
                       />}
                     </Drawer.Screen>
                     <Drawer.Screen name="Answer">
@@ -187,6 +193,7 @@ export default class App extends  React.Component {
                           token={this.state.token}
                           keyApp={this.state.key}
                           points={this.state.points}
+                          baseURL={this.state.baseURL}
                       />}
                     </Drawer.Screen>
                   </>
@@ -213,6 +220,7 @@ export default class App extends  React.Component {
                           login={this.login.bind(this)}
                           keyApp={this.state.key}
                           rememberMe={this.rememberMe.bind(this)}
+                          baseURL={this.state.baseURL}
                       />}
                     </Stack.Screen>
                     <Stack.Screen name="Register">
@@ -220,6 +228,7 @@ export default class App extends  React.Component {
                           {...props}
                           token={this.state.token}
                           keyApp={this.state.key}
+                          baseURL={this.state.baseURL}
                       />}
                     </Stack.Screen>
                   </>

@@ -58,7 +58,7 @@ export default class LoginScreen extends React.Component {
             password: password,
         };
 
-        let url = `https://panel.verbum.com.pl/apiverbum/apiVerbum/typerLogin?${queryString}`;
+        let url = `${this.props.baseURL}/typer/login?${queryString}`;
 
         fetch(url, {
             method: 'POST',
@@ -69,16 +69,16 @@ export default class LoginScreen extends React.Component {
         })
             .then(response => response.json())
             .then(async responseJson => {
-                if (responseJson.data.error.code === 0) {
+                if (responseJson.error.code === 0) {
                     await AsyncStorage.setItem('isLoggedIn', '1');
-                    await AsyncStorage.setItem('token', responseJson.data.token);
+                    await AsyncStorage.setItem('token', responseJson.user.token);
                     this.setState({
                         isLoading: false,
                     });
-                    this.props.login(responseJson.data.token)
+                    this.props.login(responseJson.user.token)
                 } else {
                     this.setState({
-                        error: responseJson.data.error,
+                        error: responseJson.error,
                         isLoading: false,
                     }, () => this.setModalErrorVisible(true))
                 }

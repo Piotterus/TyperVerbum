@@ -84,7 +84,7 @@ export default class RegisterScreen extends React.Component {
                 password: this.state.password,
             };
 
-            let url = `https://panel.verbum.com.pl/apiverbum/apiVerbum/typerRegister?${queryString}`;
+            let url = `${this.props.baseURL}/typer/register?${queryString}`;
 
             fetch(url, {
                 method: 'POST',
@@ -95,13 +95,14 @@ export default class RegisterScreen extends React.Component {
             })
                 .then(response => response.json())
                 .then(responseJson => {
-                    if (responseJson.data.error.code === 0) {
+                    console.log(responseJson);
+                    if (responseJson.error.code === 0) {
                         let title = 'Dziękujemy za rejestracje';
-                        let message = responseJson.data.info.message;
+                        let message = responseJson.info.message;
                         this.props.navigation.navigate('Login', {message: message, title: title});
                     } else {
                         this.setState({
-                            error: responseJson.data.error,
+                            error: responseJson.error,
                             isLoading: false,
                         }, () => this.setModalErrorVisible(true))
                     }

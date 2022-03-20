@@ -42,11 +42,11 @@ export default class HomeScreen extends React.Component {
 
             const queryString = this.objToQueryString({
                 key: this.props.keyApp,
-                session: this.props.token,
+                token: this.props.token,
             });
 
-            let url = `https://panel.verbum.com.pl/apiverbum/apiVerbum/typerPoints?${queryString}`;
-
+            let url = `${this.props.baseURL}/typer/myPoints?${queryString}`;
+console.log(url);
             fetch(url, {
                 method: 'GET',
                 headers: {
@@ -55,12 +55,13 @@ export default class HomeScreen extends React.Component {
             })
                 .then(response => response.json())
                 .then(responseJson => {
-                    if (responseJson.data.error.code === 0) {
-                        this.props.updatePoints(responseJson.data.points);
+                    console.log(responseJson);
+                    if (responseJson.error.code === 0) {
+                        this.props.updatePoints(responseJson.points);
                     } else {
                         this.setState({
                             isLoading: false,
-                            error: responseJson.data.error
+                            error: responseJson.error
                         }, () => this.setModalErrorVisible(true));
                     }
                 })

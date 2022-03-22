@@ -6,7 +6,7 @@ export default class MatchItem extends React.Component {
     render() {
         return(
             <View style={styles.matchView1}>
-                <Text>{this.props.stage}</Text>
+                <Text>{this.props.status}</Text>
                 <View style={styles.matchView}>
                     {this.props.winner === this.props.team1.id &&
                         <Text style={{flex: 1, color: '#00DD44', fontWeight: 'bold'}}>{this.props.team1.name}</Text>
@@ -58,6 +58,7 @@ export default class MatchItem extends React.Component {
                     betGoals1: this.props.betGoals1,
                     betGoals2: this.props.betGoals2,
                     betWinner: this.props.betWinner,
+                    winnerRequired: this.props.winnerRequired,
                 })} style={styles.betButton}>
                     <Text>TYPUJ</Text>
                 </TouchableOpacity>

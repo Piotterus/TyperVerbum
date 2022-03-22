@@ -45,10 +45,10 @@ export default class MatchListScreen extends React.Component {
 
             const queryString = this.objToQueryString({
                 key: this.props.keyApp,
-                session: this.props.token,
+                token: this.props.token,
             });
 
-            let url = `https://panel.verbum.com.pl/apiverbum/apiVerbum/typerRanking?${queryString}`;
+            let url = `${this.props.baseURL}/typer/ranking?${queryString}`;
 
             fetch(url, {
                 method: 'GET',
@@ -58,14 +58,14 @@ export default class MatchListScreen extends React.Component {
             })
                 .then(response => response.json())
                 .then(responseJson => {
-                    if (responseJson.data.error.code === 0) {
+                    if (responseJson.error.code === 0) {
                         this.setState({
-                            ranking: responseJson.data.ranking
+                            ranking: responseJson.ranking
                         }, () => this.setState({isLoading: false}))
                     } else {
                         this.setState({
                             isLoading: false,
-                            error: responseJson.data.error
+                            error: responseJson.error
                         }, () => this.setModalErrorVisible(true));
                     }
                 })
@@ -103,7 +103,7 @@ export default class MatchListScreen extends React.Component {
             rankingList.push(<RankingItem
                 key={i}
                 number={number}
-                email={this.state.ranking[i].user.email}
+                email={this.state.ranking[i].email}
                 points={this.state.ranking[i].points}
             />)
         }

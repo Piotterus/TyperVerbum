@@ -47,6 +47,7 @@ export default class BetScreen extends React.Component {
     componentDidMount() {
         this.listenerFocus = this.props.navigation.addListener('focus', () => {
             //if (typeof this.props.route.params.title !== "undefined" && typeof this.props.route.params.message !== "undefined" ) {
+            console.log(this.props.route.params);
             if (this.props.route.params?.matchID) {
                 if (this.props.route.params.betGoals1 === null) {
                     this.props.route.params.betGoals1 = 0;
@@ -60,7 +61,8 @@ export default class BetScreen extends React.Component {
                     team2: this.props.route.params.team2,
                     goals1: parseInt(this.props.route.params.betGoals1),
                     goals2: parseInt(this.props.route.params.betGoals2),
-                    winner: this.props.route.params.betWinner
+                    winner: this.props.route.params.betWinner,
+                    winnerRequired: this.props.route.params.winnerRequired
                 }, () => this.setState({isLoading: false}))
             }
         });
@@ -137,7 +139,7 @@ export default class BetScreen extends React.Component {
     }
 
     sendBet() {
-        if (this.state.winner === '') {
+        if ((this.state.winner === '' || this.state.winner === null) && this.state.winnerRequired) {
             this.setState({
                 error: {
                     code: "BŁĄD",
@@ -151,17 +153,17 @@ export default class BetScreen extends React.Component {
         });
         const queryString = this.objToQueryString({
             key: this.props.keyApp,
-            session: this.props.token,
+            token: this.props.token,
         });
 
         let body = {
-            match_id: this.state.matchID,
+            fixture_id: this.state.matchID,
             goals1: this.state.goals1,
             goals2: this.state.goals2,
             winner: this.state.winner
         };
 
-        let url = `https://panel.verbum.com.pl/apiverbum/apiVerbum/typerBetMatch?${queryString}`;
+        let url = `${this.props.baseURL}/typer/betMatch?${queryString}`;
 
         fetch(url, {
             method: 'POST',
@@ -172,14 +174,14 @@ export default class BetScreen extends React.Component {
         })
             .then(response => response.json())
             .then(async responseJson => {
-                if (responseJson.data.error.code === 0) {
+                if (responseJson.error.code === 0) {
                     this.setState({
-                        error: responseJson.data.info,
+                        error: responseJson.info,
                         isLoading: false,
                     }, () => this.setModalErrorVisible(true))
                 } else {
                     this.setState({
-                        error: responseJson.data.error,
+                        error: responseJson.error,
                         isLoading: false,
                     }, () => this.setModalErrorVisible(true))
                 }
@@ -208,27 +210,51 @@ export default class BetScreen extends React.Component {
                                 <View style={styles.betView}>
                                     <View style={{flexDirection: 'row',width: '100%', alignItems: 'center', justifyContent: 'space-around'}}>
                                         <View style={styles.teamBetView}>
-                                            <TouchableOpacity style={styles.teamButton} onPress={() => this.setWinner(this.state.team1.id)}>
-                                                {this.state.winner === this.state.team1.id &&
+                                            {this.state.winnerRequired &&
+                                                <TouchableOpacity style={styles.teamButton} onPress={() => this.setWinner(this.state.team1.id)}>
+                                                  {this.state.winner === this.state.team1.id &&
                                                     <Text style={[styles.teamText, styles.winnerText]}>{this.state.team1.name}</Text>
-                                                }
-                                                {this.state.winner !== this.state.team1.id &&
+                                                  }
+                                                  {this.state.winner !== this.state.team1.id &&
                                                     <Text style={styles.teamText}>{this.state.team1.name}</Text>
-                                                }
-                                            </TouchableOpacity>
+                                                  }
+                                                </TouchableOpacity>
+                                            }
+                                            {!this.state.winnerRequired &&
+                                                <View style={styles.teamButton}>
+                                                    {this.state.winner === this.state.team1.id &&
+                                                      <Text style={[styles.teamText, styles.winnerText]}>{this.state.team1.name}</Text>
+                                                    }
+                                                    {this.state.winner !== this.state.team1.id &&
+                                                      <Text style={styles.teamText}>{this.state.team1.name}</Text>
+                                                    }
+                                                </View>
+                                            }
                                             <Icon onPress={() => this.addGoal(1)} name="plus-circle" size={30} color="#3a7917"/>
                                             <Text style={styles.goalsText}>{this.state.goals1}</Text>
                                             <Icon onPress={() => this.subtractGoal(1)} name="minus-circle" size={30} color="#cd390d"/>
                                         </View>
                                         <View style={styles.teamBetView}>
-                                            <TouchableOpacity style={styles.teamButton} onPress={() => this.setWinner(this.state.team2.id)}>
-                                                {this.state.winner === this.state.team2.id &&
-                                                <Text style={[styles.teamText, styles.winnerText]}>{this.state.team2.name}</Text>
-                                                }
-                                                {this.state.winner !== this.state.team2.id &&
-                                                <Text style={styles.teamText}>{this.state.team2.name}</Text>
-                                                }
-                                            </TouchableOpacity>
+                                            {this.state.winnerRequired &&
+                                              <TouchableOpacity style={styles.teamButton} onPress={() => this.setWinner(this.state.team2.id)}>
+                                                  {this.state.winner === this.state.team2.id &&
+                                                    <Text style={[styles.teamText, styles.winnerText]}>{this.state.team2.name}</Text>
+                                                  }
+                                                  {this.state.winner !== this.state.team2.id &&
+                                                    <Text style={styles.teamText}>{this.state.team2.name}</Text>
+                                                  }
+                                              </TouchableOpacity>
+                                            }
+                                            {!this.state.winnerRequired &&
+                                              <View style={styles.teamButton}>
+                                                  {this.state.winner === this.state.team2.id &&
+                                                    <Text style={[styles.teamText, styles.winnerText]}>{this.state.team2.name}</Text>
+                                                  }
+                                                  {this.state.winner !== this.state.team2.id &&
+                                                    <Text style={styles.teamText}>{this.state.team2.name}</Text>
+                                                  }
+                                              </View>
+                                            }
                                             <Icon onPress={() => this.addGoal(2)} name="plus-circle" size={30} color="#3a7917"/>
                                             <Text style={styles.goalsText}>{this.state.goals2}</Text>
                                             <Icon onPress={() => this.subtractGoal(2)} name="minus-circle" size={30} color="#cd390d"/>

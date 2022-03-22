@@ -33,7 +33,7 @@ export default class App extends  React.Component {
       points: 0,
       rememberMe: false,
       week: 0,
-      baseURL: 'http://typer.verbum.com.pl/api'
+      baseURL: 'https://typer.verbum.com.pl/api'
     };
   }
 

@@ -27,8 +27,8 @@ export default class MatchListScreen extends React.Component {
         super(props);
         this.state = {
             matchList: '',
-            daysList: '',
-            dayIndex: 0,
+            competitionList: '',
+            competitionIndex: 0,
             error: '',
             modalErrorVisible: false,
             isLoading: true,
@@ -47,12 +47,12 @@ export default class MatchListScreen extends React.Component {
         this.listenerFocus = this.props.navigation.addListener('focus', () => {
 
             const queryString = this.objToQueryString({
-                key: this.props.keyApp,
-                session: this.props.token,
+                //key: this.props.keyApp,
+                token: this.props.token,
             });
 
-            let url = `https://panel.verbum.com.pl/apiverbum/apiVerbum/typerMatchesList?${queryString}`;
-
+            let url = `${this.props.baseURL}/typer/matchesList?${queryString}`;
+console.log(url);
             fetch(url, {
                 method: 'GET',
                 headers: {
@@ -61,16 +61,16 @@ export default class MatchListScreen extends React.Component {
             })
                 .then(response => response.json())
                 .then(responseJson => {
-                    if (responseJson.data.error.code === 0) {
+                    console.log(responseJson);
+                    if (responseJson.error.code === 0) {
                         this.setState({
-                            daysList: responseJson.data.days,
-                            matchList: responseJson.data.matches,
-                            dayIndex: responseJson.data.dayNowIndex,
+                            competitionList: responseJson.competitionList,
+                            matchList: responseJson.matchList,
                         }, () => this.setState({isLoading: false}))
                     } else {
                         this.setState({
                             isLoading: false,
-                            error: responseJson.data.error
+                            error: responseJson.error
                         }, () => this.setModalErrorVisible(true));
                     }
                 })
@@ -101,17 +101,17 @@ export default class MatchListScreen extends React.Component {
     };
 
     addDay() {
-        if (this.state.dayIndex < this.state.daysList.length - 1) {
+        if (this.state.competitionIndex < this.state.competitionList.length - 1) {
             this.setState({
-                dayIndex: this.state.dayIndex + 1
+                competitionIndex: this.state.competitionIndex + 1
             })
         }
     }
 
     subtractDay() {
-        if (this.state.dayIndex > 0) {
+        if (this.state.competitionIndex > 0) {
             this.setState({
-                dayIndex: this.state.dayIndex - 1
+                competitionIndex: this.state.competitionIndex - 1
             })
         }
     }
@@ -120,24 +120,26 @@ export default class MatchListScreen extends React.Component {
         let number = 0;
         let matchList = [];
         for (let i in this.state.matchList) {
-            if (this.state.matchList[i].day === this.state.daysList[this.state.dayIndex]) {
+            if (this.state.matchList[i].competition.id === this.state.competitionList[this.state.competitionIndex].id) {
                 number++;
                 matchList.push(<MatchItem
                     key={i}
                     number={number}
                     navigation={this.props.navigation}
-                    id={this.state.matchList[i].id}
-                    team1={this.state.matchList[i].team1}
-                    team2={this.state.matchList[i].team2}
-                    goals1={this.state.matchList[i].goals1}
-                    goals2={this.state.matchList[i].goals2}
-                    betGoals1={this.state.matchList[i].bet.goals1}
-                    betGoals2={this.state.matchList[i].bet.goals2}
-                    betWinner={this.state.matchList[i].bet.winner}
-                    stage={this.state.matchList[i].stage.name}
+                    id={this.state.matchList[i].fixture_id}
+                    team1={this.state.matchList[i].home}
+                    team2={this.state.matchList[i].away}
+                    goals1={this.state.matchList[i].home.goals}
+                    goals2={this.state.matchList[i].away.goals}
+                    betGoals1={this.state.matchList[i].home.betGoals}
+                    betGoals2={this.state.matchList[i].away.betGoals}
+                    betWinner={this.state.matchList[i].winner}
+                    status={this.state.matchList[i].status}
+                    date={this.state.matchList[i].date}
                     time={this.state.matchList[i].time}
                     betEnded={this.state.matchList[i].betEnded}
-                    winner={this.state.matchList[i].winner.id}
+                    winner={this.state.matchList[i].winner}
+                    winnerRequired={this.state.matchList[i].winnerRequired}
                 />)
             }
         }
@@ -145,6 +147,7 @@ export default class MatchListScreen extends React.Component {
     }
 
     render() {
+        console.log(this.state.competitionList[this.state.competitionIndex]?.id)
         return(
             <View style={{flex: 1, backgroundColor: '#b3b3b3'}}>
                 <SafeAreaView style={styles.view} forceInset={{ top: 'always', bottom: 0, right: 0, left: 0 }}>
@@ -154,7 +157,7 @@ export default class MatchListScreen extends React.Component {
                             <View style={styles.headerView}>
                                 <Icon onPress={() => this.subtractDay()} name="arrow-left" size={30} color="#777777"/>
                                 <Text style={{color: '#777777'}}>
-                                    {this.state.daysList[this.state.dayIndex]}
+                                    {this.state.competitionList[this.state.competitionIndex]?.name}
                                 </Text>
                                 <Icon onPress={() => this.addDay()} name="arrow-right" size={30} color="#777777"/>
                             </View>

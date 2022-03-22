@@ -108,10 +108,10 @@ console.log(url);
                             <ErrorModal visible={this.state.modalErrorVisible} error={this.state.error} setModalErrorVisible={this.setModalErrorVisible.bind(this)}/>
                             <View style={[styles.insideView, {flex: 1}]}>
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate("MatchList")} style={styles.betButtom}>
-                                    <Text style={styles.loginText}>TYPUJ MECZE</Text>
+                                    <Text style={styles.loginText}>TYPY DOKŁADNE</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate("QuestionList")} style={styles.betButtom}>
-                                    <Text style={styles.loginText}>TYPY SPECJALNE</Text>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate("MatchListBookMaker")} style={styles.betButtom}>
+                                    <Text style={styles.loginText}>TYPY BUKMACHERSKIE</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate("Ranking")} style={styles.rankingButton}>
                                     <Text style={styles.signinText}>ZOBACZ RANKING</Text>

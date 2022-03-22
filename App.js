@@ -18,6 +18,8 @@ import SplashScreen from './screens/SplashScreen';
 import CustomDrawer from './components/CustomDrawer';
 import QuestionListScreen from './screens/QuestionListScreen';
 import AnswerScreen from './screens/AnswerScreen';
+import MatchListBookMakerScreen from "./screens/MatchListBookMakerScreen";
+import BetBookMakerScreen from "./screens/BetBookMakerScreen";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -194,6 +196,25 @@ export default class App extends  React.Component {
                           keyApp={this.state.key}
                           points={this.state.points}
                           baseURL={this.state.baseURL}
+                      />}
+                    </Drawer.Screen>
+                    <Drawer.Screen name="MatchListBookMaker">
+                      {props => <MatchListBookMakerScreen
+                        {...props}
+                        token={this.state.token}
+                        keyApp={this.state.key}
+                        points={this.state.points}
+                        baseURL={this.state.baseURL}
+                      />}
+                    </Drawer.Screen>
+                    <Drawer.Screen name="BetBookMaker">
+                      {props => <BetBookMakerScreen
+                        {...props}
+                        token={this.state.token}
+                        keyApp={this.state.key}
+                        points={this.state.points}
+                        updatePoints={this.updatePoints.bind(this)}
+                        baseURL={this.state.baseURL}
                       />}
                     </Drawer.Screen>
                   </>

@@ -15,7 +15,7 @@ export default class MatchItem extends React.Component {
                         <Text style={{flex: 1}}>{this.props.team1.name}</Text>
                     }
                     <View style={styles.middleView}>
-                        <Text>{this.props.time}</Text>
+                        <Text>{this.props.datetime}</Text>
                         <View style={styles.scoreView}>
                             <Text>{this.props.goals1}</Text>
                             <Text>:</Text>

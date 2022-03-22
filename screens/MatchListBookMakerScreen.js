@@ -106,6 +106,10 @@ export default class MatchListBookMakerScreen extends React.Component {
       this.setState({
         competitionIndex: this.state.competitionIndex + 1
       })
+    } else {
+      this.setState({
+        competitionIndex: 0
+      })
     }
   }
 
@@ -113,6 +117,10 @@ export default class MatchListBookMakerScreen extends React.Component {
     if (this.state.competitionIndex > 0) {
       this.setState({
         competitionIndex: this.state.competitionIndex - 1
+      })
+    } else {
+      this.setState({
+        competitionIndex: this.state.competitionList.length - 1
       })
     }
   }

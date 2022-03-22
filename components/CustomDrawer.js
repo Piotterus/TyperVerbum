@@ -24,7 +24,10 @@ export default class CustomDrawer extends React.Component {
                         </TouchableOpacity>
                         <View style={styles.drawerLine}/>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('MatchList')} style={styles.drawerItem}>
-                            <Text style={styles.drawerText}>TYPUJ</Text>
+                            <Text style={styles.drawerText}>TYPY DOKŁADNE</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('MatchListBookMaker')} style={styles.drawerItem}>
+                            <Text style={styles.drawerText}>TYPY BUKMACHERSKIE</Text>
                         </TouchableOpacity>
                         <View style={styles.drawerLine}/>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Ranking')} style={styles.drawerItem}>

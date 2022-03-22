@@ -41,12 +41,12 @@ export default class LoginScreen extends React.Component {
 
     login(email,password) {
 
-        if (email === "") {
+        /*if (email === "") {
             email = "katanski.p@gmail.com"//"PL45"//"PL42"//"PL22"
         }
         if (password === "") {
             password = "Hasło"//"7FD73G7G"//"3DG61B7L"//"9LB92F3D"
-        }
+        }*/
         this.setState({
             isLoading: true,
         })

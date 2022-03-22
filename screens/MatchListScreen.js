@@ -146,7 +146,7 @@ console.log(url);
                     date={this.state.matchList[i].date}
                     time={this.state.matchList[i].time}
                     betEnded={this.state.matchList[i].betEnded}
-                    winner={this.state.matchList[i].winner}
+                    winner={this.state.matchList[i].outcomeWinner}
                     winnerRequired={this.state.matchList[i].winnerRequired}
                 />)
             }

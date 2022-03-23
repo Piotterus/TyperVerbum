@@ -212,6 +212,7 @@ export default class BetBookMakerScreen extends React.Component {
                         {this.state.betOutcome !== 1 &&
                           <Text style={styles.teamText}>{this.state.team1.name}</Text>
                         }
+                        <Text style={styles.teamText}>{this.state.odds.pre1}</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={styles.teamBetView}>
@@ -222,6 +223,7 @@ export default class BetBookMakerScreen extends React.Component {
                         {this.state.betOutcome !== "X" &&
                           <Text style={styles.teamText}>REMIS</Text>
                         }
+                        <Text style={styles.teamText}>{this.state.odds.preX}</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={styles.teamBetView}>
@@ -232,6 +234,7 @@ export default class BetBookMakerScreen extends React.Component {
                         {this.state.betOutcome !== 2 &&
                           <Text style={styles.teamText}>{this.state.team2.name}</Text>
                         }
+                        <Text style={styles.teamText}>{this.state.odds.pre2}</Text>
                       </TouchableOpacity>
                     </View>
                   </View>

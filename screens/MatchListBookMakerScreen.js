@@ -145,6 +145,7 @@ export default class MatchListBookMakerScreen extends React.Component {
           status={this.state.matchList[i].status}
           date={this.state.matchList[i].date}
           time={this.state.matchList[i].time}
+          datetime={this.state.matchList[i].datetime}
           betEnded={this.state.matchList[i].betEnded}
           odds={this.state.matchList[i].odds}
           pointsBet={this.state.matchList[i].pointsBet}
